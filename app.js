@@ -16,7 +16,7 @@ const App = {
         chatTimer: 0,
         timerInterval: null,
         cloudSettings: { baseUserCount: 24812, matchSpeed: 2000, maintMode: false },
-        filters: { location: 'All Countries', gender: 'Both', locEmoji: '🌐' },
+        filters: { location: 'All Countries', gender: 'Both', locEmoji: '🌐', topics: [] },
         countries: [
             { name: "Global", emoji: "🌐" },
             { name: "Afghanistan", emoji: "🇦🇫" }, { name: "Albania", emoji: "🇦🇱" }, { name: "Algeria", emoji: "🇩🇿" },
@@ -346,12 +346,6 @@ const App = {
         document.querySelectorAll('.topic-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 btn.classList.toggle('selected');
-                const t = btn.dataset.topic;
-                if (this.state.filters.topics.includes(t)) {
-                    this.state.filters.topics = this.state.filters.topics.filter(x => x !== t);
-                } else {
-                    this.state.filters.topics.push(t);
-                }
             });
         });
 
