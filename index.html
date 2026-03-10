@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        name="viewport" />
+    <title>Ome Line | Connecting Your World</title>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4a8fe3",
+                        "accent": "#9B59B6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#121820",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        .splash-gradient {
+            background: linear-gradient(135deg, #4A90E2 0%, #9B59B6 100%);
+        }
+
+        .bg-mesh {
+            background-color: #0c1015;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(74, 143, 227, 0.2) 0px, transparent 55%),
+                radial-gradient(at 100% 0%, rgba(155, 89, 182, 0.15) 0px, transparent 55%),
+                radial-gradient(at 50% 100%, rgba(74, 143, 227, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 50%, rgba(155, 89, 182, 0.05) 0px, transparent 40%);
+            background-attachment: fixed;
+            animation: mesh-flow 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes mesh-flow {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 5% 5%;
+            }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .start-btn-glow {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(74, 143, 227, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            animation: pulse-glow 4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 40px rgba(74, 143, 227, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
+                transform: scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 70px rgba(74, 143, 227, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.1);
+                transform: scale(1.02);
+            }
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+            animation: orb-float 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes orb-float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(100px, 150px) rotate(180deg);
+            }
+        }
+
+        .topic-btn.selected {
+            background: rgba(74, 143, 227, 0.3) !important;
+            border-color: rgba(74, 143, 227, 0.5) !important;
+            box-shadow: 0 0 15px rgba(74, 143, 227, 0.2);
+        }
+
+        .glass-heavy {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .video-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.6) 100%);
+        }
+
+        .screen {
+            display: none;
+            height: 100dvh;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Custom Animations */
+        @keyframes scan {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        .scanner-line {
+            height: 2px;
+            background: #4a8fe3;
+            box-shadow: 0 0 15px #4a8fe3;
+            animation: scan 2s infinite ease-in-out;
+        }
+
+        .partner-video-bg {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .floating-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+            animation: float-slow 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes float-slow {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(100px, 50px) scale(1.2);
+            }
+        }
+
+        @keyframes slide-out-left {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-out-right {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-in-right {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-in-left {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .slide-out {
+            animation: slide-out-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .slide-in {
+            animation: slide-in-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .slide-out-back {
+            animation: slide-out-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .slide-in-back {
+            animation: slide-in-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes ai-scan-box {
+
+            0%,
+            100% {
+                border-color: rgba(74, 143, 227, 0.3);
+                box-shadow: 0 0 10px rgba(74, 143, 227, 0.1);
+            }
+
+            50% {
+                border-color: rgba(74, 143, 227, 0.8);
+                box-shadow: 0 0 30px rgba(74, 143, 227, 0.3);
+            }
+        }
+
+        .ai-scan-active {
+            animation: ai-scan-box 1.5s infinite;
+        }
+
+        .ai-status-pulse {
+            animation: pulse-simple 2s infinite;
+        }
+
+        @keyframes pulse-simple {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .slide-out-back {
+            animation: slide-out-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .slide-in-back {
+            animation: slide-in-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .country-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .country-item:hover {
+            background: linear-gradient(90deg, rgba(74, 143, 227, 0.15), transparent);
+            transform: translateX(8px);
+        }
+
+        .modal-gradient-border {
+            position: relative;
+            background: rgba(15, 23, 32, 0.95);
+            background-clip: padding-box;
+            border: 1px solid transparent;
+        }
+
+        .modal-gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: -1;
+            margin: -1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(74, 143, 227, 0.3) 100%);
+        }
+
+        #country-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #country-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #country-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        body,
+        html {
+            min-height: 100dvh;
+            width: 100%;
+            overflow-x: hidden;
+            position: fixed;
+            /* Prevents bounce scroll on iOS */
+        }
+
+        .screen {
+            display: none;
+            height: 100dvh;
+            width: 100%;
+            overflow-y: auto;
+            /* Allow internal scrolling if needed */
+            overflow-x: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body class="font-display bg-background-dark text-slate-100 antialiased overflow-hidden">
+
+    <!-- 1. Splash Screen -->
+    <div id="splash-screen" class="screen active flex flex-col items-center justify-center splash-gradient p-8">
+        <div class="flex flex-col items-center justify-center space-y-6 animate-pulse text-center">
+            <div
+                class="relative flex items-center justify-center size-20 md:size-32 bg-white/20 backdrop-blur-md rounded-[2rem] shadow-2xl">
+                <span class="material-symbols-outlined text-white text-4xl md:text-6xl"
+                    style="font-variation-settings: 'FILL' 1">hub</span>
+            </div>
+            <div>
+                <h1 class="text-white text-4xl md:text-6xl font-bold tracking-tight mb-1 drop-shadow-md">Ome Line</h1>
+                <p class="text-white/80 text-xs md:text-lg font-medium tracking-wide">Connecting your world</p>
+            </div>
+        </div>
+        <div class="absolute bottom-12 left-0 right-0 px-10 max-w-sm mx-auto w-full">
+            <div class="flex flex-col gap-3">
+                <div class="flex justify-between items-end">
+                    <p id="splash-status"
+                        class="text-white text-[9px] md:text-sm font-medium opacity-90 uppercase tracking-tighter">
+                        Initializing...</p>
+                    <p id="splash-percent" class="text-white text-[9px] md:text-xs font-normal opacity-75">0%</p>
+                </div>
+                <div class="rounded-full bg-white/10 h-1.5 overflow-hidden backdrop-blur-sm">
+                    <div id="splash-bar"
+                        class="h-full rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all duration-300"
+                        style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Home Screen -->
+    <div id="home-screen" class="screen flex-col bg-mesh">
+        <header class="flex items-center justify-between w-full px-6 pt-8 pb-4 relative z-20">
+            <div></div>
+            <div class="flex flex-col items-center">
+                <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-primary mb-0.5">Ome Line</span>
+                <div class="h-1 w-6 rounded-full bg-gradient-to-r from-primary to-accent"></div>
+            </div>
+            <div class="flex items-center gap-2 glass px-3 py-1.5 rounded-full">
+                <span class="size-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e] animate-pulse"></span>
+                <span
+                    class="text-[10px] font-bold text-white/70 uppercase tracking-tighter truncate max-w-[80px] md:max-w-none">
+                    <span id="user-count">24,812</span> Online
+                </span>
+            </div>
+            <div></div>
+        </header>
+
+        <!-- High-Premium Floating Orbs -->
+        <div class="floating-orb w-[450px] h-[450px] bg-primary/20 top-[-10%] right-[-10%]"></div>
+        <div class="floating-orb w-[350px] h-[350px] bg-accent/20 bottom-[-5%] left-[-5%]"
+            style="animation-delay: -7s;"></div>
+        <div class="floating-orb w-[200px] h-[200px] bg-blue-400/10 top-[40%] left-[20%] animate-pulse"></div>
+
+        <main class="flex-1 flex flex-col items-center justify-center px-6 relative z-10 w-full">
+            <div class="w-full text-center space-y-3 mb-8 md:mb-16">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-2 md:mb-4 backdrop-blur-md">
+                    <span class="size-1.5 md:size-2 rounded-full bg-primary animate-ping"></span>
+                    <span class="text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Platform
+                        Active</span>
+                </div>
+                <div
+                    class="absolute inset-0 z-20 flex flex-col items-center justify-center text-white pointer-events-none">
+                    <div class="relative mb-8">
+                        <!-- AI Scan Frame -->
+                        <div class="size-48 md:size-64 border-2 border-primary/30 rounded-3xl ai-scan-active relative">
+                            <!-- Corner Accents -->
+                            <div
+                                class="absolute -top-1 -left-1 size-6 border-t-4 border-l-4 border-primary rounded-tl-lg">
+                            </div>
+                            <div
+                                class="absolute -top-1 -right-1 size-6 border-t-4 border-r-4 border-primary rounded-tr-lg">
+                            </div>
+                            <div
+                                class="absolute -bottom-1 -left-1 size-6 border-b-4 border-l-4 border-primary rounded-bl-lg">
+                            </div>
+                            <div
+                                class="absolute -bottom-1 -right-1 size-6 border-b-4 border-r-4 border-primary rounded-br-lg">
+                            </div>
+
+                            <!-- Scanner Line -->
+                            <div class="absolute inset-x-2 scanner-line z-10"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center space-y-4">
+                        <h2 id="ai-match-status" class="text-xl md:text-2xl font-bold tracking-tight ai-status-pulse">
+                            Initializing AI Match...
+                        </h2>
+                        <div
+                            class="flex items-center justify-center gap-2 text-white/40 text-[10px] md:text-xs uppercase tracking-[0.3em]">
+                            <span class="size-1.5 bg-primary rounded-full animate-ping"></span>
+                            <span id="ai-match-log">Analyzing Network</span>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-light tracking-tight text-white leading-tight">
+                    Pure <span
+                        class="font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Connection.</span>
+                </h1>
+                <p class="text-white/40 text-sm md:text-lg font-light tracking-wide max-w-[280px] md:max-w-xs mx-auto">
+                    Anonymous conversations, beautifully reimagined.
+                </p>
+            </div>
+
+            <!-- Filter Cards -->
+            <div
+                class="grid grid-cols-2 gap-3 md:gap-5 mb-10 md:mb-16 relative z-10 w-full max-w-xs md:max-w-none md:flex md:flex-wrap md:justify-center">
+                <div id="filter-location"
+                    class="filter-card glass p-4 md:w-28 md:h-32 rounded-[1.5rem] md:rounded-[2rem] flex flex-col items-center justify-center border-white/10 group active:scale-95 transition-transform cursor-pointer"
+                    data-filter="location">
+                    <div
+                        class="size-10 md:size-12 rounded-xl md:rounded-2xl bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors mb-2 md:mb-3">
+                        <span class="material-symbols-outlined text-primary !text-2xl md:!text-[28px]">public</span>
+                    </div>
+                    <span
+                        class="text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-white/80 truncate w-full text-center px-1">All
+                        Countries</span>
+                    <span class="text-[8px] md:text-[9px] text-white/40 mt-0.5 md:mt-1">Country</span>
+                </div>
+
+                <div id="filter-gender"
+                    class="filter-card glass p-4 md:w-28 md:h-32 rounded-[1.5rem] md:rounded-[2rem] flex flex-col items-center justify-center border-white/10 group active:scale-95 transition-transform cursor-pointer"
+                    data-filter="gender">
+                    <div
+                        class="size-10 md:size-12 rounded-xl md:rounded-2xl bg-accent/20 flex items-center justify-center group-hover:bg-accent/30 transition-colors mb-2 md:mb-3">
+                        <span class="material-symbols-outlined text-accent !text-2xl md:!text-[28px]">wc</span>
+                    </div>
+                    <span
+                        class="text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-white/80">Both</span>
+                    <span class="text-[8px] md:text-[9px] text-white/40 mt-0.5 md:mt-1">Gender</span>
+                </div>
+            </div>
+
+            <!-- Start Action -->
+            <div class="relative group cursor-pointer" id="start-btn">
+                <div
+                    class="absolute -inset-6 md:-inset-10 bg-primary/20 blur-[40px] md:blur-[60px] rounded-full opacity-50 group-hover:opacity-80 transition-opacity">
+                </div>
+                <button
+                    class="glass relative size-40 md:size-60 rounded-full flex flex-col items-center justify-center start-btn-glow border-white/20">
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined !text-5xl md:!text-[72px] text-white mb-1 md:mb-2 translate-x-1 transition-transform group-hover:scale-110">play_arrow</span>
+                    </div>
+                    <span
+                        class="text-[10px] md:text-xs font-black tracking-[0.4em] md:tracking-[0.5em] uppercase text-white/90">Start</span>
+                </button>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- 3. Video Chat Screen -->
+    <div id="chat-screen" class="screen flex-col bg-background-dark">
+        <!-- Remote Video Container -->
+        <div class="absolute inset-0 z-0 overflow-hidden bg-black">
+            <video id="remote-video" class="w-full h-full object-cover" autoplay playsinline></video>
+            <div id="partner-placeholder"
+                class="absolute inset-0 bg-slate-800 bg-cover bg-center transition-opacity duration-1000 partner-video-bg"
+                style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=1000')">
+            </div>
+            <div class="absolute inset-0 video-gradient-overlay"></div>
+
+            <!-- Matching Overlay -->
+            <div id="matching-overlay"
+                class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-md z-10 transition-opacity">
+                <div class="relative size-20 md:size-24 mb-6">
+                    <div class="absolute inset-0 border-4 border-primary/20 rounded-full"></div>
+                    <div
+                        class="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin">
+                    </div>
+                </div>
+                <h2 class="text-xl md:text-2xl font-bold text-white mb-2">Searching...</h2>
+                <p id="match-status" class="text-white/60 text-xs md:text-sm">Finding someone awesome for you</p>
+            </div>
+        </div>
+
+        <!-- Top Nav -->
+        <div class="relative z-20 flex items-center justify-between p-4 md:p-6 w-full">
+            <div class="flex items-center gap-3">
+                <div
+                    class="flex items-center justify-center bg-primary/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-primary/30">
+                    <span class="size-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+                    <span
+                        class="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-slate-100">Live</span>
+                    <span class="mx-2 text-slate-500 text-[10px]">|</span>
+                    <span id="chat-timer" class="text-[10px] md:text-xs font-medium text-slate-100">00:00</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="report-btn"
+                    class="size-10 flex items-center justify-center rounded-full bg-rose-500/10 backdrop-blur-md text-rose-400 border border-rose-500/20"
+                    title="Report User">
+                    <span class="material-symbols-outlined !text-xl">flag</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Local View (PIP) -->
+        <div
+            class="absolute top-20 right-4 z-20 w-28 md:w-40 aspect-[3/4] rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl bg-black">
+            <video id="local-video" class="w-full h-full object-cover -scale-x-100" autoplay muted playsinline></video>
+            <div id="age-scanner" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity">
+                <div class="scanner-line absolute top-0 left-0 w-full"></div>
+                <div
+                    class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 px-2 py-1 rounded text-[8px] md:text-[10px] text-primary whitespace-nowrap">
+                    Age: <span id="detect-age-val">--</span>
+                </div>
+            </div>
+            <div id="local-status"
+                class="absolute bottom-2 right-2 size-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+        </div>
+
+        <!-- Bottom UI Area -->
+        <div
+            class="absolute bottom-0 left-0 right-0 z-10 flex flex-col p-4 pb-10 md:pb-8 @container pointer-events-none">
+            <!-- Messages Container -->
+            <div
+                class="mb-4 md:mb-6 w-full max-w-[280px] md:max-w-sm bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 md:p-4 shadow-xl flex flex-col gap-2 pointer-events-auto">
+                <div id="chat-messages"
+                    class="flex flex-col gap-2 max-h-32 md:max-h-48 overflow-y-auto pr-2 scrollbar-none scroll-smooth text-left">
+                    <div class="flex items-start gap-2">
+                        <span class="text-primary font-bold text-[10px] md:text-xs mt-0.5 shrink-0">System:</span>
+                        <p class="text-[11px] md:text-sm text-slate-400 leading-relaxed">Welcome to Ome Line! Be
+                            respectful.</p>
+                    </div>
+                </div>
+                <!-- Message Input -->
+                <div class="mt-1 flex items-center gap-2">
+                    <input id="message-input"
+                        class="flex-1 bg-white/10 border-none rounded-full px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm text-white placeholder-slate-400 focus:ring-1 focus:ring-primary/50"
+                        placeholder="Type..." type="text" />
+                    <button id="send-msg-btn"
+                        class="size-8 rounded-full bg-primary flex items-center justify-center text-white shrink-0 active:scale-95 transition-transform">
+                        <span class="material-symbols-outlined !text-sm">send</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center justify-between gap-2 md:gap-4 pointer-events-auto w-full">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <button id="toggle-mic"
+                        class="size-12 md:size-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white active:bg-white/30 transition-all">
+                        <span class="material-symbols-outlined !text-xl md:!text-2xl">mic</span>
+                    </button>
+                    <button id="toggle-video"
+                        class="size-12 md:size-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white active:bg-white/30 transition-all">
+                        <span class="material-symbols-outlined !text-xl md:!text-2xl">videocam</span>
+                    </button>
+                </div>
+                <div class="flex-1 flex justify-center">
+                    <button id="next-btn"
+                        class="h-12 md:h-14 w-full max-w-[140px] md:max-w-none md:px-12 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center text-white font-bold text-sm md:text-base shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined mr-1 md:mr-2 !text-xl md:!text-2xl">fast_forward</span>
+                        NEXT
+                    </button>
+                </div>
+                <div class="flex items-center">
+                    <button id="stop-btn"
+                        class="size-12 md:size-14 rounded-full bg-rose-500/90 backdrop-blur-md flex items-center justify-center text-white shadow-lg active:bg-rose-600 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined !text-xl md:!text-2xl"
+                            style="font-variation-settings: 'FILL' 1">call_end</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filter-modal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-3xl transition-all duration-500">
+        <div
+            class="modal-gradient-border w-full max-w-[480px] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col max-h-[85dvh] animate-in zoom-in-90 fade-in duration-300">
+            <!-- Modal Header -->
+            <div class="p-6 md:p-8 pb-4 flex items-center justify-between">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="size-12 md:size-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary !text-2xl md:!text-3xl">language</span>
+                    </div>
+                    <div>
+                        <h3 id="modal-title" class="text-xl md:text-2xl font-bold text-white tracking-tight">Select
+                            Country</h3>
+                        <p id="modal-subtitle"
+                            class="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.2em] md:tracking-[0.3em] mt-0.5">
+                            Refine your match</p>
+                    </div>
+                </div>
+                <button id="close-modal"
+                    class="size-10 md:size-12 rounded-xl md:rounded-2xl bg-white/5 flex items-center justify-center text-white/50 hover:text-white active:scale-95 transition-all">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Country Selector -->
+            <div id="country-selector" class="flex-1 flex flex-col min-h-0">
+                <div class="px-6 md:px-8 mb-4">
+                    <div class="relative group">
+                        <input type="text" id="country-search" placeholder="Search..."
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-12 py-3.5 md:py-5 text-white placeholder:text-white/20 focus:ring-1 focus:ring-primary/50 outline-none transition-all text-sm md:text-lg">
+                        <span
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 !text-xl md:!text-2xl">search</span>
+                    </div>
+                </div>
+                <div id="country-list" class="flex-1 overflow-y-auto px-4 md:px-6 mb-6 scrollbar-thin">
+                    <!-- Countries injected here -->
+                </div>
+            </div>
+
+            <!-- Gender Selector -->
+            <div id="gender-selector" class="hidden p-6 md:p-8 pt-2 space-y-3">
+                <div class="grid grid-cols-1 gap-3">
+                    <button
+                        class="gender-opt flex items-center gap-4 p-4 md:p-6 rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/10 hover:bg-primary/20 active:scale-[0.98] transition-all text-left"
+                        data-value="Both">
+                        <div
+                            class="size-12 md:size-16 rounded-xl md:rounded-[1.2rem] bg-primary/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary !text-xl md:!text-2xl">wc</span>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-base md:text-xl text-white">Everyone</span>
+                            <span class="text-[10px] md:text-xs text-white/40">Connect with all Genders</span>
+                        </div>
+                    </button>
+                    <button
+                        class="gender-opt flex items-center gap-4 p-4 md:p-6 rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/10 hover:bg-blue-500/20 active:scale-[0.98] transition-all text-left"
+                        data-value="Male">
+                        <div
+                            class="size-12 md:size-16 rounded-xl md:rounded-[1.2rem] bg-blue-500/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-400 !text-xl md:!text-2xl">male</span>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-base md:text-xl text-white">Male</span>
+                            <span class="text-[10px] md:text-xs text-white/40">Connect with Men only</span>
+                        </div>
+                    </button>
+                    <button
+                        class="gender-opt flex items-center gap-4 p-4 md:p-6 rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/10 hover:bg-pink-500/20 active:scale-[0.98] transition-all text-left"
+                        data-value="Female">
+                        <div
+                            class="size-12 md:size-16 rounded-xl md:rounded-[1.2rem] bg-pink-500/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-pink-400 !text-xl md:!text-2xl">female</span>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-base md:text-xl text-white">Female</span>
+                            <span class="text-[10px] md:text-xs text-white/40">Connect with Women only</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script src="app.js?v=3.5"></script>
+</body>

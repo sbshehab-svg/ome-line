@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ome Line | Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4a8fe3",
+                        "background-dark": "#0f1117",
+                        "card-dark": "#161923",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass {
+            background: rgba(22, 25, 35, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .scrollbar-hide {
+            scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-200 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 border-r border-white/5 flex flex-col p-6 gap-8 bg-card-dark/50">
+        <div class="flex items-center gap-3">
+            <div class="size-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">hub</span>
+            </div>
+            <span class="font-bold tracking-tight text-xl">Ome Admin</span>
+        </div>
+
+        <nav class="flex flex-col gap-2">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium">
+                <span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">group</span> Users
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">forum</span> Monitoring
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">bar_chart</span> Analytics
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">settings</span> Settings
+            </a>
+        </nav>
+
+        <div class="mt-auto border-t border-white/5 pt-6">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-rose-500/10 rounded-xl text-slate-400 hover:text-rose-400 transition-colors">
+                <span class="material-symbols-outlined">logout</span> Exit Admin
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 overflow-y-auto">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-3xl font-bold mb-1">Overview</h1>
+                <p class="text-slate-500 text-sm">Platform health and real-time statistics.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-600">Server Status</p>
+                    <p class="text-sm font-medium text-green-500 flex items-center justify-end gap-1">
+                        <span class="size-2 bg-green-500 rounded-full animate-pulse"></span> Operational
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="glass p-6 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="size-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined">people</span>
+                    </div>
+                    <span class="text-green-500 text-xs font-bold">+12%</span>
+                </div>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active Users</p>
+                <p class="text-2xl font-bold">42,831</p>
+            </div>
+            <div class="glass p-6 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="size-10 bg-accent/10 text-purple-400 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined">video_chat</span>
+                    </div>
+                    <span class="text-green-500 text-xs font-bold">+8%</span>
+                </div>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active Calls</p>
+                <p class="text-2xl font-bold">14,204</p>
+            </div>
+            <div class="glass p-6 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="size-10 bg-rose-500/10 text-rose-400 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined">report</span>
+                    </div>
+                    <span class="text-rose-500 text-xs font-bold">+24</span>
+                </div>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">New Reports</p>
+                <p class="text-2xl font-bold">128</p>
+            </div>
+            <div class="glass p-6 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="size-10 bg-blue-500/10 text-blue-400 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined">public</span>
+                    </div>
+                    <span class="text-slate-500 text-xs font-bold">142</span>
+                </div>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Countries</p>
+                <p class="text-2xl font-bold">195</p>
+            </div>
+        </div>
+
+        <!-- Tables & Lists -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- Platform Controls -->
+            <div class="glass rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Platform Controls</h3>
+                    <div class="size-10 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center">
+                        <span class="material-symbols-outlined">settings_suggest</span>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Base User
+                            Count</label>
+                        <div class="flex gap-4">
+                            <input type="number" id="base-user-count"
+                                class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="24812">
+                            <button onclick="saveSetting('baseUserCount', 'base-user-count')"
+                                class="px-6 py-3 bg-primary text-white font-bold rounded-xl active:scale-95 transition-all">Set</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Matching
+                            Speed (ms)</label>
+                        <div class="flex gap-4">
+                            <input type="number" id="match-speed"
+                                class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="2000">
+                            <button onclick="saveSetting('matchSpeed', 'match-speed')"
+                                class="px-6 py-3 bg-primary text-white font-bold rounded-xl active:scale-95 transition-all">Set</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 border border-white/5 bg-white/5 rounded-2xl">
+                        <div>
+                            <p class="font-bold text-sm">Maintenance Mode</p>
+                            <p class="text-[10px] text-slate-500">Temporarily disable chat access</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="maint-mode" class="sr-only peer"
+                                onchange="toggleMaint(this.checked)">
+                            <div
+                                class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Reports -->
+            <div class="glass rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Recent Reports</h3>
+                    <button class="text-primary text-xs font-bold hover:underline">View All</button>
+                </div>
+                <div class="space-y-4" id="reports-list">
+                    <div class="flex items-center justify-between p-4 border border-white/5 rounded-xl bg-white/5">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="size-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-300">
+                                U1</div>
+                            <div>
+                                <p class="text-sm font-bold leading-none mb-1">User_8422</p>
+                                <p class="text-[10px] text-slate-500">Reported for: Profanity</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="handleReport(this)"
+                                class="px-3 py-1 bg-rose-500/20 text-rose-400 text-[10px] font-bold rounded-lg hover:bg-rose-500/30 transition-colors">Ban</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Load initial settings
+        window.onload = () => {
+            document.getElementById('base-user-count').value = localStorage.getItem('baseUserCount') || 24812;
+            document.getElementById('match-speed').value = localStorage.getItem('matchSpeed') || 2000;
+            document.getElementById('maint-mode').checked = localStorage.getItem('maintMode') === 'true';
+        };
+
+        function saveSetting(key, inputId) {
+            const val = document.getElementById(inputId).value;
+            localStorage.setItem(key, val);
+            showToast('Settings Updated!');
+        }
+
+        function toggleMaint(val) {
+            localStorage.setItem('maintMode', val);
+            showToast(val ? 'Maintenance Enabled' : 'Maintenance Disabled');
+        }
+
+        function handleReport(btn) {
+            const row = btn.closest('.flex');
+            row.style.opacity = '0.5';
+            row.style.pointerEvents = 'none';
+            showToast('Action Success');
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-8 right-8 bg-primary text-white px-6 py-3 rounded-xl font-bold border border-white/20 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300 z-[100]';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('animate-out', 'fade-out', 'slide-out-to-bottom-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>
