@@ -101,9 +101,7 @@ const App = {
             countrySelector: document.getElementById('country-selector'),
             genderSelector: document.getElementById('gender-selector'),
             countryList: document.getElementById('country-list'),
-            countrySearch: document.getElementById('country-search'),
-            aiStatus: document.getElementById('ai-match-status'),
-            aiLog: document.getElementById('ai-match-log')
+            countrySearch: document.getElementById('country-search')
         };
 
         if (!this.el.splash || !this.el.home) {
@@ -469,37 +467,14 @@ const App = {
         this.el.locBadge.style.opacity = '0';
         if (this.el.remoteVid) this.el.remoteVid.srcObject = null;
 
-        const loc = this.state.filters.location;
-        const gen = this.state.filters.gender;
+        const speed = parseInt(localStorage.getItem('matchSpeed')) || 2000;
 
-        // AI Matching Simulation Sequence
-        const sequence = [
-            { s: 'Scanning Region...', l: `Searching in ${loc}` },
-            { s: 'Analyzing Traffic...', l: `Filtering ${gen} users` },
-            { s: 'Locating Peer...', l: 'Handshaking...' },
-            { s: 'AI Validating...', l: 'Analyzing Face Patterns' },
-            { s: 'Matched!', l: 'Connecting...' }
-        ];
-
-        let step = 0;
-        const speed = parseInt(localStorage.getItem('matchSpeed')) || 3000;
-        const stepTime = speed / sequence.length;
-
-        const runStep = () => {
-            if (step < sequence.length) {
-                if (this.el.aiStatus) this.el.aiStatus.innerText = sequence[step].s;
-                if (this.el.aiLog) this.el.aiLog.innerText = sequence[step].l;
-                step++;
-                setTimeout(runStep, stepTime);
-            } else {
-                console.log("Searching for real peers...");
-                if (!window.connectedToRealPeer) {
-                    this.onStrangerConnected();
-                }
+        setTimeout(() => {
+            console.log("Searching for real peers...");
+            if (!window.connectedToRealPeer) {
+                this.onStrangerConnected();
             }
-        };
-
-        runStep();
+        }, speed);
     },
 
     startTimer() {
@@ -514,27 +489,7 @@ const App = {
     },
 
     runScanner() {
-        this.el.scanner.style.opacity = '1';
-        const ageLabel = this.el.ageVal;
-
-        const scanSteps = [
-            'Analyzing Face Geometry...',
-            'Estimating Age/Gender...',
-            'Verifying Authenticity...',
-            '21 ✓ Verified'
-        ];
-
-        let i = 0;
-        const tick = () => {
-            if (i < scanSteps.length) {
-                ageLabel.innerText = scanSteps[i];
-                i++;
-                setTimeout(tick, 800);
-            } else {
-                setTimeout(() => this.el.scanner.style.opacity = '0', 2000);
-            }
-        };
-        tick();
+        // AI Face scan removed
     },
 
     sendMsg() {

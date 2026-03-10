@@ -267,39 +267,6 @@
             animation: slide-in-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes ai-scan-box {
-
-            0%,
-            100% {
-                border-color: rgba(74, 143, 227, 0.3);
-                box-shadow: 0 0 10px rgba(74, 143, 227, 0.1);
-            }
-
-            50% {
-                border-color: rgba(74, 143, 227, 0.8);
-                box-shadow: 0 0 30px rgba(74, 143, 227, 0.3);
-            }
-        }
-
-        .ai-scan-active {
-            animation: ai-scan-box 1.5s infinite;
-        }
-
-        .ai-status-pulse {
-            animation: pulse-simple 2s infinite;
-        }
-
-        @keyframes pulse-simple {
-
-            0%,
-            100% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
 
         .slide-out-back {
             animation: slide-out-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -438,41 +405,6 @@
                     <span class="text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Platform
                         Active</span>
                 </div>
-                <div
-                    class="absolute inset-0 z-20 flex flex-col items-center justify-center text-white pointer-events-none">
-                    <div class="relative mb-8">
-                        <!-- AI Scan Frame -->
-                        <div class="size-48 md:size-64 border-2 border-primary/30 rounded-3xl ai-scan-active relative">
-                            <!-- Corner Accents -->
-                            <div
-                                class="absolute -top-1 -left-1 size-6 border-t-4 border-l-4 border-primary rounded-tl-lg">
-                            </div>
-                            <div
-                                class="absolute -top-1 -right-1 size-6 border-t-4 border-r-4 border-primary rounded-tr-lg">
-                            </div>
-                            <div
-                                class="absolute -bottom-1 -left-1 size-6 border-b-4 border-l-4 border-primary rounded-bl-lg">
-                            </div>
-                            <div
-                                class="absolute -bottom-1 -right-1 size-6 border-b-4 border-r-4 border-primary rounded-br-lg">
-                            </div>
-
-                            <!-- Scanner Line -->
-                            <div class="absolute inset-x-2 scanner-line z-10"></div>
-                        </div>
-                    </div>
-
-                    <div class="text-center space-y-4">
-                        <h2 id="ai-match-status" class="text-xl md:text-2xl font-bold tracking-tight ai-status-pulse">
-                            Initializing AI Match...
-                        </h2>
-                        <div
-                            class="flex items-center justify-center gap-2 text-white/40 text-[10px] md:text-xs uppercase tracking-[0.3em]">
-                            <span class="size-1.5 bg-primary rounded-full animate-ping"></span>
-                            <span id="ai-match-log">Analyzing Network</span>
-                        </div>
-                    </div>
-                </div>
                 <h1 class="text-4xl md:text-6xl font-light tracking-tight text-white leading-tight">
                     Pure <span
                         class="font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Connection.</span>
@@ -580,13 +512,6 @@
         <div
             class="absolute top-20 right-4 z-20 w-28 md:w-40 aspect-[3/4] rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl bg-black">
             <video id="local-video" class="w-full h-full object-cover -scale-x-100" autoplay muted playsinline></video>
-            <div id="age-scanner" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity">
-                <div class="scanner-line absolute top-0 left-0 w-full"></div>
-                <div
-                    class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 px-2 py-1 rounded text-[8px] md:text-[10px] text-primary whitespace-nowrap">
-                    Age: <span id="detect-age-val">--</span>
-                </div>
-            </div>
             <div id="local-status"
                 class="absolute bottom-2 right-2 size-2.5 bg-green-500 rounded-full border-2 border-white"></div>
         </div>
