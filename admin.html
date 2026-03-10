@@ -213,39 +213,80 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="handleReport(this)"
+                            <button onclick="handleReport(this, 'ban')"
                                 class="px-3 py-1 bg-rose-500/20 text-rose-400 text-[10px] font-bold rounded-lg hover:bg-rose-500/30 transition-colors">Ban</button>
+                            <button onclick="handleReport(this, 'super')"
+                                class="px-3 py-1 bg-red-600 text-white text-[10px] font-bold rounded-lg hover:bg-red-700 transition-colors">Super
+                                Ban</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Super Ban Manager -->
+        <div class="glass rounded-2xl p-6 mb-10">
+            <h3 class="font-bold text-lg mb-4">Super Ban Manager</h3>
+            <div class="flex gap-4">
+                <input type="text" id="ban-id-input"
+                    class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-1 focus:ring-red-500 outline-none"
+                    placeholder="Enter Peer ID or User Token">
+                <button onclick="superBanManual()"
+                    class="px-8 py-3 bg-red-600 text-white font-bold rounded-xl active:scale-95 transition-all">Apply
+                    Super Ban</button>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-3 uppercase tracking-widest">Note: Super Ban restricts access across
+                all devices sharing this token pool.</p>
+        </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Load initial settings
-        window.onload = () => {
-            document.getElementById('base-user-count').value = localStorage.getItem('baseUserCount') || 24812;
-            document.getElementById('match-speed').value = localStorage.getItem('matchSpeed') || 2000;
-            document.getElementById('maint-mode').checked = localStorage.getItem('maintMode') === 'true';
+        const SUPABASE_URL = 'https://sosajtahjkfafrrhmkzc.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_OjVDNRehcFqxPwsRe7flrQ_KcCOKdYv';
+        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+        window.onload = async () => {
+            if (!supabase) return;
+            const { data } = await supabase.from('settings').select('*').single();
+            if (data) {
+                document.getElementById('base-user-count').value = data.base_count;
+                document.getElementById('match-speed').value = data.match_speed;
+                document.getElementById('maint-mode').checked = data.maint_mode;
+            }
         };
 
-        function saveSetting(key, inputId) {
+        async function saveSetting(key, inputId) {
+            if (!supabase) return;
             const val = document.getElementById(inputId).value;
-            localStorage.setItem(key, val);
-            showToast('Settings Updated!');
+            const dbKey = key === 'baseUserCount' ? 'base_count' : 'match_speed';
+            const { error } = await supabase.from('settings').update({ [dbKey]: parseInt(val) }).eq('id', 1);
+            showToast(error ? 'Error saving to Cloud' : 'Cloud Settings Updated!');
         }
 
-        function toggleMaint(val) {
-            localStorage.setItem('maintMode', val);
+        async function toggleMaint(val) {
+            if (!supabase) return;
+            await supabase.from('settings').update({ maint_mode: val }).eq('id', 1);
             showToast(val ? 'Maintenance Enabled' : 'Maintenance Disabled');
         }
 
-        function handleReport(btn) {
+        async function handleReport(btn, type) {
             const row = btn.closest('.flex');
             row.style.opacity = '0.5';
             row.style.pointerEvents = 'none';
-            showToast('Action Success');
+            if (type === 'super' && supabase) {
+                // Persistent cloud ban
+                await supabase.from('bans').insert({ peer_id: 'sample-id', is_active: true });
+            }
+            showToast(type === 'super' ? 'SUPER BANNED SUCCESS' : 'Action Success');
+        }
+
+        async function superBanManual() {
+            const id = document.getElementById('ban-id-input').value;
+            if (!id || !supabase) return;
+            await supabase.from('bans').insert({ peer_id: id, is_active: true });
+            document.getElementById('ban-id-input').value = '';
+            showToast(`ID ${id} Cloud Banned!`);
         }
 
         function showToast(msg) {

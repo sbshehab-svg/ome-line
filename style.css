@@ -33,7 +33,8 @@ body {
   line-height: 1.5;
 }
 
-h1, .logo-text {
+h1,
+.logo-text {
   font-family: 'Outfit', sans-serif;
 }
 
@@ -65,8 +66,13 @@ h1, .logo-text {
 }
 
 @keyframes float {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(50px, 50px);
+  }
 }
 
 #app {
@@ -97,6 +103,7 @@ h1, .logo-text {
 .logo-text span {
   background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -122,9 +129,20 @@ h1, .logo-text {
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.7; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
 }
 
 /* Navigation Screen Logic */
@@ -153,8 +171,15 @@ h1, .logo-text {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-content h1 {
@@ -168,6 +193,7 @@ h1, .logo-text {
   display: block;
   background: linear-gradient(90deg, #6366f1, #ec4899);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -239,7 +265,7 @@ h1, .logo-text {
   box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
 }
 
-input[type="text"], 
+input[type="text"],
 input[type="number"],
 select {
   background: rgba(255, 255, 255, 0.05);
@@ -252,7 +278,8 @@ select {
   transition: all 0.2s;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   border-color: var(--neon-blue);
   background: rgba(255, 255, 255, 0.1);
 }
@@ -276,7 +303,8 @@ input:focus, select:focus {
   margin-bottom: 24px;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
   padding: 16px 40px;
   border-radius: 50px;
   font-weight: 700;
@@ -376,14 +404,15 @@ input:focus, select:focus {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scaleX(-1); /* Mirror local video */
+  transform: scaleX(-1);
+  /* Mirror local video */
 }
 
 .local-label {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 10px;
@@ -422,7 +451,9 @@ input:focus, select:focus {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .partner-info {
@@ -459,7 +490,10 @@ input:focus, select:focus {
 /* Age Scanner Mock Integration */
 .age-scanner-mock {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(14, 165, 233, 0.1);
   display: flex;
   flex-direction: column;
@@ -470,24 +504,37 @@ input:focus, select:focus {
   transition: opacity 0.3s;
 }
 
-.age-scanner-mock.active { opacity: 1; }
+.age-scanner-mock.active {
+  opacity: 1;
+}
 
 .scanner-line {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 2px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
   background: var(--neon-blue);
   box-shadow: 0 0 15px var(--neon-blue);
   animation: scan 2s infinite ease-in-out;
 }
 
 @keyframes scan {
-  0% { top: 10%; }
-  50% { top: 90%; }
-  100% { top: 10%; }
+  0% {
+    top: 10%;
+  }
+
+  50% {
+    top: 90%;
+  }
+
+  100% {
+    top: 10%;
+  }
 }
 
 .scan-result {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   padding: 4px 12px;
   border-radius: 4px;
   font-size: 12px;
@@ -541,7 +588,7 @@ input:focus, select:focus {
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
@@ -570,13 +617,15 @@ input:focus, select:focus {
   align-self: center;
   font-size: 12px;
   color: var(--text-muted);
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   padding: 4px 12px;
   border-radius: 12px;
   margin: 10px 0;
 }
 
-.hide { display: none !important; }
+.hide {
+  display: none !important;
+}
 
 /* Chat Input */
 .chat-input-area {
@@ -607,7 +656,7 @@ input:focus, select:focus {
 }
 
 .esc-badge {
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 10px;
@@ -660,7 +709,7 @@ input:focus, select:focus {
     grid-template-columns: 1fr;
     grid-template-rows: 1.2fr 1fr;
   }
-  
+
   .chat-section {
     height: 100%;
   }
@@ -671,7 +720,7 @@ input:focus, select:focus {
     bottom: 10px;
     left: 10px;
   }
-  
+
   .hero-content h1 {
     font-size: 40px;
   }
@@ -681,15 +730,15 @@ input:focus, select:focus {
   .filter-row {
     flex-direction: column;
   }
-  
+
   .start-actions {
     flex-direction: column;
   }
-  
+
   .main-header {
     padding: 0 15px;
   }
-  
+
   .online-status span {
     display: none;
   }

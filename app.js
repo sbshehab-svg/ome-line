@@ -1,6 +1,7 @@
-/**
- * Ome Line - Core Application Logic (SPA Version)
- */
+// Supabase Configuration
+const SUPABASE_URL = 'https://sosajtahjkfafrrhmkzc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_OjVDNRehcFqxPwsRe7flrQ_KcCOKdYv';
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 const App = {
     state: {
@@ -14,6 +15,7 @@ const App = {
         myPeerId: null,
         chatTimer: 0,
         timerInterval: null,
+        cloudSettings: { baseUserCount: 24812, matchSpeed: 2000, maintMode: false },
         filters: { location: 'All Countries', gender: 'Both', locEmoji: '🌐' },
         countries: [
             { name: "Global", emoji: "🌐" },
@@ -76,7 +78,7 @@ const App = {
 
     el: {},
 
-    init() {
+    async init() {
         // Cache DOM elements
         this.el = {
             splash: document.getElementById('splash-screen'),
@@ -109,6 +111,10 @@ const App = {
             return;
         }
 
+        // 1. Cloud Sync
+        await this.loadCloudSettings();
+        await this.checkSuperBan();
+
         this.bindEvents();
         this.runSplash();
         this.startUserCounter();
@@ -116,12 +122,47 @@ const App = {
         this.initPeer();
     },
 
+    async loadCloudSettings() {
+        if (!supabase) return;
+        try {
+            const { data } = await supabase.from('settings').select('*').single();
+            if (data) {
+                this.state.cloudSettings = {
+                    baseUserCount: data.base_count,
+                    matchSpeed: data.match_speed,
+                    maintMode: data.maint_mode
+                };
+            }
+        } catch (e) {
+            console.log("Supabase not configured or table missing.");
+        }
+    },
+
+    async checkSuperBan() {
+        if (!supabase || !this.state.myPeerId) return;
+        const { data } = await supabase.from('bans').select('*').eq('peer_id', this.state.myPeerId).single();
+        if (data) this.handleBannedUser();
+    },
+
+    handleBannedUser() {
+        document.body.innerHTML = `
+            <div class="h-[100dvh] flex flex-col items-center justify-center bg-black text-white p-10 text-center">
+                <span class="material-symbols-outlined text-red-600 !text-8xl mb-6">gavel</span>
+                <h1 class="text-4xl font-black uppercase tracking-tighter mb-4">You are Super Banned</h1>
+                <p class="text-slate-500 max-w-xs">Your access to Ome Line has been permanently revoked by the administrator for violating platform community guidelines.</p>
+                <div class="mt-10 p-4 border border-red-900/30 bg-red-900/10 rounded-2xl text-[10px] text-red-500 uppercase tracking-widest">
+                    System Level Cloud Block Active
+                </div>
+            </div>
+        `;
+    },
+
     initPeer() {
-        // High quality STUN servers
         const config = {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' }
             ]
         };
 
@@ -130,6 +171,7 @@ const App = {
         this.state.peer.on('open', id => {
             this.state.myPeerId = id;
             console.log('My Peer ID:', id);
+            this.advertisePresence();
         });
 
         this.state.peer.on('call', call => {
@@ -140,10 +182,19 @@ const App = {
 
         this.state.peer.on('error', err => {
             console.error('Peer error:', err);
-            if (err.type === 'peer-unavailable') {
-                this.searchStranger();
-            }
+            if (err.type === 'peer-unavailable') this.searchStranger();
         });
+    },
+
+    async advertisePresence() {
+        if (!supabase || !this.state.myPeerId) return;
+        try {
+            await supabase.from('presence').upsert({
+                peer_id: this.state.myPeerId,
+                last_seen: new Date().toISOString(),
+                is_available: true
+            });
+        } catch (e) { }
     },
 
     handleCall(call) {
@@ -156,7 +207,6 @@ const App = {
             }
             this.onStrangerConnected();
         });
-
         call.on('close', () => this.leaveChat());
     },
 
@@ -180,27 +230,20 @@ const App = {
         let lastClick = 0;
         const brand = document.querySelector('header span.text-primary');
         if (!brand) return;
-
         brand.addEventListener('click', () => {
             const now = Date.now();
             if (now - lastClick < 500) clicks++;
             else clicks = 1;
             lastClick = now;
-
-            if (clicks >= 5) {
-                window.location.href = 'admin.html';
-            }
+            if (clicks >= 5) window.location.href = 'admin.html';
         });
     },
 
     startUserCounter() {
         const span = document.getElementById('user-count');
         if (!span) return;
-
-        // Load base count from admin settings or default
-        const base = parseInt(localStorage.getItem('baseUserCount')) || 24812;
+        const base = this.state.cloudSettings.baseUserCount;
         span.innerText = base.toLocaleString();
-
         setInterval(() => {
             const current = parseInt(span.innerText.replace(/,/g, ''));
             const next = current + Math.floor(Math.random() * 20 - 10);
@@ -457,7 +500,7 @@ const App = {
         this.show(this.el.home, 'slide-back');
     },
 
-    searchStranger() {
+    async searchStranger() {
         if (this.state.currentCall) this.state.currentCall.close();
 
         this.state.isSearching = true;
@@ -467,11 +510,33 @@ const App = {
         this.el.locBadge.style.opacity = '0';
         if (this.el.remoteVid) this.el.remoteVid.srcObject = null;
 
-        const speed = parseInt(localStorage.getItem('matchSpeed')) || 2000;
+        const speed = this.state.cloudSettings.matchSpeed;
 
-        setTimeout(() => {
-            console.log("Searching for real peers...");
-            if (!window.connectedToRealPeer) {
+        setTimeout(async () => {
+            console.log("Searching for real peers globally in Supabase...");
+
+            if (supabase) {
+                try {
+                    const { data } = await supabase.from('presence')
+                        .select('peer_id')
+                        .neq('peer_id', this.state.myPeerId)
+                        .eq('is_available', true)
+                        .limit(1);
+
+                    if (data && data.length > 0) {
+                        const strangerId = data[0].peer_id;
+                        const call = this.state.peer.call(strangerId, this.state.localStream);
+                        this.handleCall(call);
+
+                        // Mark both as busy in cloud
+                        await supabase.from('presence').update({ is_available: false }).eq('peer_id', this.state.myPeerId);
+                    } else {
+                        this.onStrangerConnected();
+                    }
+                } catch (e) {
+                    this.onStrangerConnected();
+                }
+            } else {
                 this.onStrangerConnected();
             }
         }, speed);
