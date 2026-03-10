@@ -111,15 +111,16 @@ const App = {
             return;
         }
 
-        // 1. Cloud Sync
-        await this.loadCloudSettings();
-        await this.checkSuperBan();
-
+        // Start UI immediately — do NOT await cloud before showing splash
         this.bindEvents();
         this.runSplash();
         this.startUserCounter();
         this.setupHiddenAdmin();
         this.initPeer();
+
+        // Load cloud settings in background (non-blocking)
+        this.loadCloudSettings();
+        this.checkSuperBan();
     },
 
     async loadCloudSettings() {
