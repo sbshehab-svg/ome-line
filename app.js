@@ -79,48 +79,53 @@ const App = {
     el: {},
 
     async init() {
-        // Cache DOM elements
-        this.el = {
-            splash: document.getElementById('splash-screen'),
-            home: document.getElementById('home-screen'),
-            chat: document.getElementById('chat-screen'),
-            bar: document.getElementById('splash-bar'),
-            pct: document.getElementById('splash-percent'),
-            status: document.getElementById('splash-status'),
-            msgs: document.getElementById('chat-messages'),
-            input: document.getElementById('message-input'),
-            timer: document.getElementById('chat-timer'),
-            locText: document.getElementById('partner-location-text'),
-            locBadge: document.getElementById('partner-location-badge'),
-            overlay: document.getElementById('matching-overlay'),
-            ph: document.getElementById('partner-placeholder'),
-            scanner: document.getElementById('age-scanner'),
-            ageVal: document.getElementById('detect-age-val'),
-            localVid: document.getElementById('local-video'),
-            remoteVid: document.getElementById('remote-video'),
-            modal: document.getElementById('filter-modal'),
-            modalTitle: document.getElementById('modal-title'),
-            countrySelector: document.getElementById('country-selector'),
-            genderSelector: document.getElementById('gender-selector'),
-            countryList: document.getElementById('country-list'),
-            countrySearch: document.getElementById('country-search')
-        };
+        try {
+            // Cache DOM elements
+            this.el = {
+                splash: document.getElementById('splash-screen'),
+                home: document.getElementById('home-screen'),
+                chat: document.getElementById('chat-screen'),
+                bar: document.getElementById('splash-bar'),
+                pct: document.getElementById('splash-percent'),
+                status: document.getElementById('splash-status'),
+                msgs: document.getElementById('chat-messages'),
+                input: document.getElementById('message-input'),
+                timer: document.getElementById('chat-timer'),
+                locText: document.getElementById('partner-location-text'),
+                locBadge: document.getElementById('partner-location-badge'),
+                overlay: document.getElementById('matching-overlay'),
+                ph: document.getElementById('partner-placeholder'),
+                scanner: document.getElementById('age-scanner'),
+                ageVal: document.getElementById('detect-age-val'),
+                localVid: document.getElementById('local-video'),
+                remoteVid: document.getElementById('remote-video'),
+                modal: document.getElementById('filter-modal'),
+                modalTitle: document.getElementById('modal-title'),
+                countrySelector: document.getElementById('country-selector'),
+                genderSelector: document.getElementById('gender-selector'),
+                countryList: document.getElementById('country-list'),
+                countrySearch: document.getElementById('country-search')
+            };
 
-        if (!this.el.splash || !this.el.home) {
-            console.error("Critical elements missing!");
-            return;
+            if (!this.el.splash || !this.el.home) {
+                console.error("Critical elements missing!");
+                return;
+            }
+
+            // Start UI immediately
+            this.bindEvents();
+            this.runSplash();
+            this.startUserCounter();
+            this.setupHiddenAdmin();
+            this.initPeer();
+
+            // Load cloud settings in background
+            this.loadCloudSettings();
+            this.checkSuperBan();
+        } catch (error) {
+            console.error(error);
+            alert("App Init Error: " + error.message + "\nStack: " + error.stack);
         }
-
-        // Start UI immediately — do NOT await cloud before showing splash
-        this.bindEvents();
-        this.runSplash();
-        this.startUserCounter();
-        this.setupHiddenAdmin();
-        this.initPeer();
-
-        // Load cloud settings in background (non-blocking)
-        this.loadCloudSettings();
-        this.checkSuperBan();
     },
 
     async loadCloudSettings() {
